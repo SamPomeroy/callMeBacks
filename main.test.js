@@ -9,6 +9,56 @@ const {
   map
 } = require("./main");
 
+
+const filter = (collection, callback)=>{
+  let result = [];
+  for (let num of collection) {
+    if (callback(num) === true) {
+      result.push(num);
+    }
+  }
+  return result;
+}
+
+const reject = (collection, callback)=>{
+  const rejectedElements = [];
+  for (const element of collection) {
+    if (!callback(element)) {
+      rejectedElements.push(element);
+    }
+  }
+  return rejectedElements;
+ 
+}
+
+const uniq = (collection) =>{
+  const uniqueArray = [];
+
+  for (let i = 0; i < collection.length; i++) {
+    if (uniqueArray.indexOf(collection[i]) === -1) {
+      uniqueArray.push(collection[i]);
+    }
+  }
+
+  return uniqueArray;
+
+}
+
+const reduce = (collection, callback, initialVal) =>{
+  let accumulator = initialVal;
+  for (let key in collection) {
+    if (accumulator === undefined) {
+      accumulator = collection[key]
+    }
+    accumulator = callback(accumulator, collection[key]);
+  }
+  return accumulator;
+  
+}
+
+
+
+
 describe("identity", function () {
   var uniqueObject = {};
 
@@ -150,10 +200,10 @@ describe("map", function () {
   });
 });
 
-const { filter, 
-        reject, 
-        uniq, 
-        reduce } = require('./functions.js');
+// const { filter, 
+//         reject, 
+//         uniq, 
+//         reduce } = require('./main.test.js');
 
 describe('filter', () => {
   it('should return an array with elements that pass the truth test', () => {
@@ -218,25 +268,25 @@ describe('uniq', () => {
 describe('reduce', () => {
   it('should reduce an array to a single value', () => {
     const arr = [1, 2, 3, 4, 5];
-    const result = reduce(arr, (accumulator, item) => accumulator + item, 0);
+    const result = reduce(arr, (callback, item) => callback + item, 0);
     assert.strictEqual(result, 15);
   });
 
   it('should reduce an object to a single value', () => {
     const obj = { a: 1, b: 2, c: 3 };
-    const result = reduce(obj, (accumulator, item) => accumulator + item, 0);
+    const result = reduce(obj, (callback, item) => callback + item, 0);
     assert.strictEqual(result, 6);
   });
 
-  it('should return the initial accumulator value when the input array is empty', () => {
+  it('should return the initial callback value when the input array is empty', () => {
     const arr = [];
-    const result = reduce(arr, (accumulator, item) => accumulator + item, 10);
+    const result = reduce(arr, (callback, item) => callback + item, 10);
     assert.strictEqual(result, 10);
   });
 
-  it('should handle an empty object and return the initial accumulator value', () => {
+  it('should handle an empty object and return the initial callback value', () => {
     const obj = {};
-    const result = reduce(obj, (accumulator, item) => accumulator + item, 10);
+    const result = reduce(obj, (callback, item) => callback + item, 10);
     assert.strictEqual(result, 10);
   });
 });
